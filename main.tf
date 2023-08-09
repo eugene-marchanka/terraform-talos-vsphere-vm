@@ -13,8 +13,9 @@ terraform {
 }
 
 module "userdata" {
-  source  = "ilpozzd/vm-userdata/talos"
-  version = "1.0.1"
+  source = "git@github.com:eugene-marchanka/terraform-talos-vm-userdata.git?ref=75476b132c9b2fe7d800c61722e58dd094cf362e"
+  # source  = "ilpozzd/vm-userdata/talos"
+  # version = "1.0.1"
 
   count = var.vm_count
 
