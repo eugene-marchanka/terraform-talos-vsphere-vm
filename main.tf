@@ -89,7 +89,7 @@ resource "vsphere_virtual_machine" "this" {
   vapp {
     properties = {
       # "guestinfo.talos.config" = module.userdata[count.index].configuration
-      "talos.config" = file("${path.module}/templates/config.yaml")
+      "talos.config" = filebase64("${path.module}/templates/config.yaml")
     }
   }
 
