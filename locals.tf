@@ -31,5 +31,5 @@ locals {
 }
 
 locals {
-  config_file = yamldecode(file("${path.root}/templates/config.yaml"))
+  config_file = yamldecode(file("${path.module}/templates/config.yaml"))
 }
