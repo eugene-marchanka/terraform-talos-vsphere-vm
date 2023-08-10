@@ -30,6 +30,6 @@ locals {
   }
 }
 
-locals {
-  config_file = yamldecode(file("${path.module}/templates/config.yaml"))
-}
+# locals {
+#   config_file = yamldecode(file("${path.module}/templates/config.yaml"))
+# }

@@ -4,5 +4,5 @@ output "default_ip_addresses" {
 }
 
 output "config_file" {
-  value = local.config_file
+  value = file("${path.module}/templates/config.yaml")
 }
