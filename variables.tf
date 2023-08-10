@@ -498,5 +498,5 @@ variable "cluster_extra_manifest_headers" {
 variable "vmtoolsd_extra_manifest" {
   description = "A link to talos-vmtoolsd Kubernetes manifest."
   type        = string
-  default     = "https://raw.githubusercontent.com/mologie/talos-vmtoolsd/release-0.3/deploy/0.3.yaml"
+  default     = "https://raw.githubusercontent.com/mologie/talos-vmtoolsd/master/deploy/unstable.yaml"
 }
