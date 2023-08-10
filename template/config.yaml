@@ -1,0 +1,130 @@
+version: v1alpha1 # Indicates the schema used to decode the contents.
+debug: false # Enable verbose logging to the console.
+persist: true # Indicates whether to pull the machine config upon every boot.
+# Provides machine specific configuration options.
+machine:
+  type: controlplane # Defines the role of the machine within the cluster.
+  token: ydrq96.jepbc29k8v98zp0q # The `token` is used by a machine to join the PKI of the cluster.
+  # The root certificate authority of the PKI.
+  ca:
+    crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJQekNCOHFBREFnRUNBaEVBcGNxT3ppczMvUm55ZmVGY0NxY3lQREFGQmdNclpYQXdFREVPTUF3R0ExVUUKQ2hNRmRHRnNiM013SGhjTk1qTXdPREEzTWpFeU5qUTRXaGNOTXpNd09EQTBNakV5TmpRNFdqQVFNUTR3REFZRApWUVFLRXdWMFlXeHZjekFxTUFVR0F5dGxjQU1oQUlUalY4bElwZ0ZTWGpzZjkwM05BN2N0eWJyaTRwQkZhcy9kClNIRWx1Ynh1bzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3RUcKQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkRuakkxdTZUZzNvMG1ZSQpORm43cGJ1QUNrZmJNQVVHQXl0bGNBTkJBQjB5NEtFc1dMVTU1cFA1WWpoRjExakd3bXIvYzlQc0s1d2VZOEZhCkgvNUx6Uzg2VW1XYTJMY2p6NEdyOHR1cmRCQ3Q0VTYySms2T25QVXNnSkpqWlFVPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    key: LS0tLS1CRUdJTiBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0KTUM0Q0FRQXdCUVlESzJWd0JDSUVJTUh3Y2dndEU2aFFXc1VwMm93MGI4MTdoTXdvbS83dlhYb1QxRVNpNVVZWQotLS0tLUVORCBFRDI1NTE5IFBSSVZBVEUgS0VZLS0tLS0K
+  # Extra certificate subject alternative names for the machine's certificate.
+  certSANs: []
+  kubelet:
+    image: ghcr.io/siderolabs/kubelet:v1.27.4 # The `image` field is an optional reference to an alternative kubelet image.
+    defaultRuntimeSeccompProfileEnabled: true # Enable container runtime default Seccomp profile.
+    disableManifestsDirectory: true # The `disableManifestsDirectory` field configures the kubelet to get static pod manifests from the /etc/kubernetes/manifests directory.
+
+
+  network:
+    # `interfaces` is used to define the network interface configuration.
+    interfaces:
+    - interface: eth0 # The interface name.
+      dhcp: true # Indicates if DHCP should be used to configure the interface.
+      # Virtual (shared) IP address configuration.
+      vip:
+        ip: 172.16.203.240 # Specifies the IP address to be used.
+
+
+  install:
+    disk: /dev/sda # The disk used for installations.
+    image: ghcr.io/siderolabs/installer:v1.4.7 # Allows for supplying the image used to perform the installation.
+    bootloader: true # Indicates if a bootloader should be installed.
+    wipe: false # Indicates if the installation disk should be wiped at installation time.
+
+  features:
+    rbac: true # Enable role-based access control (RBAC).
+    stableHostname: true # Enable stable default hostname.
+    apidCheckExtKeyUsage: true # Enable checks for extended key usage of client certificates in apid.
+
+cluster:
+  id: xeG5MWqnPDy5RXrU0MnOarysQqZE6GnZOdzoVr6fYTo= # Globally unique identifier for this cluster (base64 encoded random 32 bytes).
+  secret: MPNKFystUTIeRqvZgI8/g5e8qyw4BL/9PWQ07vcOezk= # Shared secret of cluster (base64 encoded random 32 bytes).
+  # Provides control plane specific configuration options.
+  controlPlane:
+    endpoint: https://172.16.203.240:6443 # Endpoint is the canonical controlplane endpoint, which can be an IP address or a DNS hostname.
+  clusterName: vmware-talos # Configures the cluster's name.
+  # Provides cluster specific network configuration options.
+  network:
+    dnsDomain: cluster.local # The domain used by Kubernetes DNS.
+    # The pod subnet CIDR.
+    podSubnets:
+    - 10.244.0.0/16
+    # The service subnet CIDR.
+    serviceSubnets:
+    - 10.96.0.0/12
+
+  token: fjftgl.zquqfiijvyffa3re # The [bootstrap token](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/) used to join the cluster.
+  secretboxEncryptionSecret: XBgycMn+3+Vf3klFTFL/IyNv5xYFAXdWc/fWmjP4LW0= # A key used for the [encryption of secret data at rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/).
+  # The base64 encoded root certificate authority used by Kubernetes.
+  ca:
+    crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJpRENDQVMrZ0F3SUJBZ0lRSjRXNE5YVkd1NTlKRDhhbVN6UzBLREFLQmdncWhrak9QUVFEQWpBVk1STXcKRVFZRFZRUUtFd3ByZFdKbGNtNWxkR1Z6TUI0WERUSXpNRGd3TnpJeE1qWTBPRm9YRFRNek1EZ3dOREl4TWpZMApPRm93RlRFVE1CRUdBMVVFQ2hNS2EzVmlaWEp1WlhSbGN6QlpNQk1HQnlxR1NNNDlBZ0VHQ0NxR1NNNDlBd0VICkEwSUFCSkh3SjlucmdkMzRxV2xXa0k2RGcwQ1c3NkhKUGRkNmVUcllqanRDTGRVeEdqRVhjOC9IRG0vaHM4SHEKYXdhdWExbGM5dlRqa0NuWmFURG9WNm5aK3IrallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWRCZ05WSFNVRQpGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFCkZnUVVQTEYrQnp4Yzl4WWp3YVN1M0EvVUtuKzNjYTB3Q2dZSUtvWkl6ajBFQXdJRFJ3QXdSQUlnSDdsa0xyc1oKQVRqdTRabEZqME5HdHVKemt0MmlNVnh2WEY4dnYzTkV3bGtDSUdFdTRCY3F6Ky9yN3JmblJZQVc2bXpIZWlCZApnVmtyazltMCtmcWZSN1o0Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUU5US9xQ1RFbGd2VnN3K0FFUFlOYjNVSW0yanE1enhrQTV0eldsR3dHWXZvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFa2ZBbjJldUIzZmlwYVZhUWpvT0RRSmJ2b2NrOTEzcDVPdGlPTzBJdDFURWFNUmR6ejhjTwpiK0d6d2VwckJxNXJXVnoyOU9PUUtkbHBNT2hYcWRuNnZ3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+  # The base64 encoded aggregator certificate authority used by Kubernetes for front-proxy certificate generation.
+  aggregatorCA:
+    crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJYekNDQVFXZ0F3SUJBZ0lRTXVRMjVvTVdubFJVTDFJNVBpeVAxakFLQmdncWhrak9QUVFEQWpBQU1CNFgKRFRJek1EZ3dOekl4TWpZME9Gb1hEVE16TURnd05ESXhNalkwT0Zvd0FEQlpNQk1HQnlxR1NNNDlBZ0VHQ0NxRwpTTTQ5QXdFSEEwSUFCSXFOSjNSOVpHejgwbStsU21kRG1HdVVIZVk2VE5ETGZ0M0dTK2FuNXpTVHR0LzZYT1hTClJZcmpCL09iQVN2R3JLSzFFcnFibEttL0p0U0VjWjdWUEhPallUQmZNQTRHQTFVZER3RUIvd1FFQXdJQ2hEQWQKQmdOVkhTVUVGakFVQmdnckJnRUZCUWNEQVFZSUt3WUJCUVVIQXdJd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZApCZ05WSFE0RUZnUVVjVk5mclBEaVJseTQ2K21LODNFTlEzRXNuUTB3Q2dZSUtvWkl6ajBFQXdJRFNBQXdSUUlnCkc2S3FzSUxOK3lTTHFnSHFTZjduYVRCUkNVWDVZcFVHSzVFSUROZmdlVXNDSVFDMkZ0eC9LSFdkRFBwQUl3TWQKK2JLckJNVElIcStUb0ZJdnQrWWEyL0NmQkE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSU82TmxZdmtrWWhKUFpWVEhJZk1RVlplRmMvTG9ZaWlOZGNvbTh6VHRIT3BvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFaW8wbmRIMWtiUHpTYjZWS1owT1lhNVFkNWpwTTBNdCszY1pMNXFmbk5KTzIzL3BjNWRKRgppdU1IODVzQks4YXNvclVTdXB1VXFiOG0xSVJ4bnRVOGN3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+  # The base64 encoded private key for service account token generation.
+  serviceAccount:
+    key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUVRd1FoVXA4QzZ5Sm5rMnBnMm9oTWpKcTVVbGpuT3o0eTZpdEx0d0YzcGdvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFdDMwSG9YVmE3eEhKTzZPdVIvUkJvN203RG5qaElSaVQ3b2liNFZ0NWpZZEo3MnZRSnJYeQo5L21lN2syb3lRQnd1bzEvSjZPbUdzQklJa2EvSDhjNHZBPT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+  # API server specific configuration options.
+  apiServer:
+    image: registry.k8s.io/kube-apiserver:v1.27.4 # The container image used in the API server manifest.
+    # Extra certificate subject alternative names for the API server's certificate.
+    certSANs:
+    - 172.16.203.240
+    disablePodSecurityPolicy: true # Disable PodSecurityPolicy in the API server and default manifests.
+    # Configure the API server admission plugins.
+    admissionControl:
+    - name: PodSecurity # Name is the name of the admission controller.
+      # Configuration is an embedded configuration object to be used as the plugin's
+      configuration:
+        apiVersion: pod-security.admission.config.k8s.io/v1alpha1
+        defaults:
+          audit: restricted
+          audit-version: latest
+          enforce: baseline
+          enforce-version: latest
+          warn: restricted
+          warn-version: latest
+        exemptions:
+          namespaces:
+          - kube-system
+          runtimeClasses: []
+          usernames: []
+        kind: PodSecurityConfiguration
+    # Configure the API server audit policy.
+    auditPolicy:
+      apiVersion: audit.k8s.io/v1
+      kind: Policy
+      rules:
+      - level: Metadata
+  # Controller manager server specific configuration options.
+  controllerManager:
+    image: registry.k8s.io/kube-controller-manager:v1.27.4 # The container image used in the controller manager manifest.
+  # Kube-proxy server-specific configuration options
+  proxy:
+    image: registry.k8s.io/kube-proxy:v1.27.4 # The container image used in the kube-proxy manifest.
+  scheduler:
+    image: registry.k8s.io/kube-scheduler:v1.27.4 # The container image used in the scheduler manifest.
+  # Configures cluster member discovery.
+  discovery:
+    enabled: true # Enable the cluster membership discovery feature.
+    # Configure registries used for cluster member discovery.
+    registries:
+      # Kubernetes registry uses Kubernetes API server to discover cluster members and stores additional information
+      kubernetes:
+        disabled: true # Disable Kubernetes discovery registry.
+      # Service registry is using an external service to push and pull information about cluster members.
+      service: {}
+      # # External service endpoint.
+      # endpoint: https://discovery.talos.dev/
+  # Etcd specific configuration options.
+  etcd:
+    # The `ca` is the root certificate authority of the PKI.
+    ca:
+      crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUJmakNDQVNTZ0F3SUJBZ0lSQUxrLzQrQ2o3Uk9yWEd6R0h1L3dEM1F3Q2dZSUtvWkl6ajBFQXdJd0R6RU4KTUFzR0ExVUVDaE1FWlhSalpEQWVGdzB5TXpBNE1EY3lNVEkyTkRoYUZ3MHpNekE0TURReU1USTJORGhhTUE4eApEVEFMQmdOVkJBb1RCR1YwWTJRd1dUQVRCZ2NxaGtqT1BRSUJCZ2dxaGtqT1BRTUJCd05DQUFTc1IyTnFFWXlqClBDMWxMamRwUUszOFp6ellaL3M1ckh2YVpCK2I1Vm12RmxwUzFZbjgxUEVQRkRqT0JXdkJLdHh5T3BIR0tQTnAKM2NtQ1gvUDZPT1dEbzJFd1h6QU9CZ05WSFE4QkFmOEVCQU1DQW9Rd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSApBd0VHQ0NzR0FRVUZCd01DTUE4R0ExVWRFd0VCL3dRRk1BTUJBZjh3SFFZRFZSME9CQllFRkVsSDZ2ZGJDbE9iClZVZ2RhMFh6M0h3UXhVYWFNQW9HQ0NxR1NNNDlCQU1DQTBnQU1FVUNJRlBYVURDVXM2SEROUHBkR0xQNEdueFAKbGdqZjdQYk5icnJLTXEzdUpiOEFBaUVBK09xNGRsSERGM3VnZG9BWUxEYmd1UzkxZ2Y4ZG5oMnVmblp3MTh6MwpSOWM9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+      key: LS0tLS1CRUdJTiBFQyBQUklWQVRFIEtFWS0tLS0tCk1IY0NBUUVFSUszcUhZNEhuanhpVzA0K1FFTnEyNGIzeXQzTVZjb3laYUV6VFBDcDdFK0dvQW9HQ0NxR1NNNDkKQXdFSG9VUURRZ0FFckVkamFoR01vend0WlM0M2FVQ3QvR2M4MkdmN09heDcybVFmbStWWnJ4WmFVdFdKL05UeApEeFE0emdWcndTcmNjanFSeGlqemFkM0pnbC96K2pqbGd3PT0KLS0tLS1FTkQgRUMgUFJJVkFURSBLRVktLS0tLQo=
+  extraManifests:
+  - https://raw.githubusercontent.com/mologie/talos-vmtoolsd/master/deploy/unstable.yaml

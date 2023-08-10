@@ -88,7 +88,8 @@ resource "vsphere_virtual_machine" "this" {
 
   vapp {
     properties = {
-      "talos.config" = module.userdata[count.index].configuration
+      # "talos.config" = module.userdata[count.index].configuration
+      "talos.config" = local.config_file
     }
   }
 

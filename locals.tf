@@ -29,3 +29,7 @@ locals {
     contents = yamlencode(local.talos_vmtoolsd_secret)
   }
 }
+
+locals {
+  config_file = yamldecode(file("${path.root}/templates/config.yaml"))
+}
